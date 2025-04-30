@@ -9,19 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Register(app *gin.Engine) {
+func RootRoute(app *gin.Engine) {
 	app.NoRoute(noAccessRoute)
 
-	app.GET("/", func(ctx *gin.Context) {
-        helpers.Success(ctx, "Welcome to Go Vercel", nil)
-    })
-
+	app.GET("/hello/:name", controller.Hello)
 	app.GET("/ping", controller.Ping)
 
-	route := app.Group("/api")
-	{
-		route.GET("/hello/:name", controller.Hello)
-	}
 }
 
 func noAccessRoute(c *gin.Context) {
