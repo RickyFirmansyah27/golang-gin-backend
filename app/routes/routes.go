@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"golang-vercel/app/controller"
+	"golang-vercel/app/controllers"
 	"golang-vercel/app/helpers"
 
 	"net/http"
@@ -11,9 +11,7 @@ import (
 
 func RootRoute(app *gin.Engine) {
 	app.NoRoute(noAccessRoute)
-
-	app.GET("/hello/:name", controller.Hello)
-	app.GET("/ping", controller.Ping)
+	app.GET("/items", controllers.GetAllItems)
 
 }
 
