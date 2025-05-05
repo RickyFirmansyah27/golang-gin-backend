@@ -1,6 +1,7 @@
 package config
 
 import (
+	"golang-vercel/app/models"
 	"strconv"
 	"strings"
 )
@@ -118,4 +119,42 @@ func GetAllItems(params map[string]string) ([]map[string]interface{}, int, error
 	}
 
 	return items, totalData, nil
+}
+
+func CreateItem(newItem models.Item) error {
+	query := `
+		INSERT INTO items (name, category_id, stock, unit, min_stock) 
+		VALUES ($1, $2, $3, $4, $5)`
+
+	_, err := ExecuteSQLWithParams(query, newItem.Name, newItem.CategoryID, newItem.Stock, newItem.Unit, newItem.MinStock)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateItem(updatedItem models.Item) error {
+	query := `
+		UPDATE items 
+		SET name = $1, category_id = $2, stock = $3, unit = $4, min_stock = $5 
+		WHERE id = $6`
+
+	_, err := ExecuteSQLWithParams(query, updatedItem.Name, updatedItem.CategoryID, updatedItem.Stock, updatedItem.Unit, updatedItem.MinStock, updatedItem.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DeleteItem(id string) error {
+	query := `DELETE FROM items WHERE id = $1`
+
+	_, err := ExecuteSQLWithParams(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

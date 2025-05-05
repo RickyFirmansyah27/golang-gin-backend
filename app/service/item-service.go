@@ -11,7 +11,6 @@ import (
 func GetItems(c *gin.Context) (int, []models.Item, error) {
 	log.Println("[ItemsService] - Fetching items...", c.Request.URL.Query())
 
-	// Get query parameters from Gin context
 	queryParams := make(map[string]string)
 	for key, values := range c.Request.URL.Query() {
 		if len(values) > 0 {
@@ -40,4 +39,44 @@ func GetItems(c *gin.Context) (int, []models.Item, error) {
 
 	log.Printf("[ItemsService] - Successfully fetched %d items", len(items))
 	return totalData, items, nil
+}
+
+func CreateItem(newItem models.Item) error {
+	log.Println("[ItemsService] - Creating item...")
+
+	err := config.CreateItem(newItem)
+	if err != nil {
+		log.Printf("[ItemsService] - Error creating item: %v", err)
+		return err
+	}
+
+	log.Printf("[ItemsService] - Successfully created item: %v", newItem)
+	return nil
+}
+
+func UpdateItem(updatedItem models.Item) error {
+	log.Println("[ItemsService] - Updating item...")
+	log.Println(updatedItem)
+
+	err := config.UpdateItem(updatedItem)
+	if err != nil {
+		log.Printf("[ItemsService] - Error updating item: %v", err)
+		return err
+	}
+
+	log.Printf("[ItemsService] - Successfully updated item: %v", updatedItem)
+	return nil
+}
+
+func DeleteItem(id string) error {
+	log.Println("[ItemsService] - Deleting item...")
+
+	err := config.DeleteItem(id)
+	if err != nil {
+		log.Printf("[ItemsService] - Error deleting item: %v", err)
+		return err
+	}
+
+	log.Printf("[ItemsService] - Successfully deleted item: %v", id)
+	return nil
 }
