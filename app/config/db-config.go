@@ -12,7 +12,7 @@ import (
 )
 
 var dbPool *pgxpool.Pool
-var contextLogger = "[Postgres DB - connection]"
+var contextLogger = "[Neon DB - connection]"
 
 func init() {
 	err := godotenv.Load()
@@ -64,11 +64,17 @@ func ExecuteSQLWithParams(sql string, params ...interface{}) (pgx.Rows, error) {
 	}
 	defer conn.Release()
 
+	log.Printf("%s | Executing SQL Query: %s", contextLogger, sql)
+	if len(params) > 0 {
+		log.Printf("%s | Query Parameters: %v", contextLogger, params)
+	}
+
 	rows, err := conn.Query(context.Background(), sql, params...)
 	if err != nil {
+		log.Printf("%s | Query Failed: %v", contextLogger, err)
 		return nil, fmt.Errorf("failed to execute query: %v", err)
 	}
-	
+
 	return rows, nil
 }
 
@@ -91,7 +97,7 @@ func ExecuteSQLTransaction(ctx context.Context, tx pgx.Tx, sql string, params ..
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query in transaction: %v", err)
 	}
-	
+
 	return rows, nil
 }
 func RollbackTransaction(ctx context.Context, tx pgx.Tx) error {
